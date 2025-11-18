@@ -1,3 +1,4 @@
+# Tested with Python 3.12.x
 beautifulsoup4>=4.12
 feedparser>=6.0
 lxml>=5.0
