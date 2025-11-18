@@ -1,0 +1,18 @@
+apis:
+  stocks:
+    key: mG9wznyNXoph8ApIWcVsmxFp6JtPmQ8c
+    url: https://api.polygon.io/v2/aggs/ticker
+date: '2025-10-13'
+defaults:
+  interval_minutes: 60
+  keywords:
+  - government shutdown
+  - nvidia
+  news_date: 2025-10-29
+  news_timezone: America/New_York
+  price_date: 2025-10-29
+  price_hours_after: 48
+  price_trading_days: 3
+market_timezone: America/New_York
+news_domains: []
+ticker: NVDA

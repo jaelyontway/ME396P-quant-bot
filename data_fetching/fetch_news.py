@@ -44,9 +44,12 @@ class NewsFetcher:
         query = ' '.join(self.keywords)
         encoded_query = quote(query)
 
-        # Add date range to query (Google News syntax)
-        # Format: after:YYYY-MM-DD before:YYYY-MM-DD
-        date_filter = f" after:{self.start_date.strftime('%Y-%m-%d')} before:{self.end_date.strftime('%Y-%m-%d')}"
+        # Add date range to query (Google News syntax: before date is exclusive)
+        inclusive_end = self.end_date + timedelta(days=1)
+        date_filter = (
+            f" after:{self.start_date.strftime('%Y-%m-%d')}"
+            f" before:{inclusive_end.strftime('%Y-%m-%d')}"
+        )
         encoded_query += quote(date_filter)
 
         url = f"https://news.google.com/rss/search?q={encoded_query}&hl=en-US&gl=US&ceid=US:en"

@@ -1,0 +1,14 @@
+{
+  "request_path": "https://api.polygon.io/v2/aggs/ticker/NVDA/range/1/hour/2024-10-28/2024-10-31",
+  "status_code": 200,
+  "result_count": 48,
+  "start": "2024-10-28T09:30:00-04:00",
+  "end": "2024-10-31T09:30:00-04:00",
+  "interval_minutes": 60,
+  "bars_returned": 21,
+  "first_timestamp": "2024-10-28T14:00:00+00:00",
+  "last_timestamp": "2024-10-30T20:00:00+00:00",
+  "anchor_timestamp": "2024-10-28T09:30:00-04:00",
+  "anchor_reason": "explicit_price_date_hours_after",
+  "hours_requested": 72
+}
