@@ -158,4 +158,16 @@ Outputs:
 - `feedcsv.csv` / `feedcsv2.csv` – working copies of the latest news/price pull used by EAST.
 - `simulation/targetSimDate.txt` – the simulation date override (auto-managed by the controller).
 
+
+## Generated data base for users trying
+However users need to manually find the contents of the news and update the dataset 
+Check here for genereated database
+```
+data/data_base 
+```
+
+If user want to test a demo, use these data
+```
+data/demo_data
+``` 
 Use these docs when onboarding new contributors or when you need to verify the end‑to‑end data shapes before making code changes.
