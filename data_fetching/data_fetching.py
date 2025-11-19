@@ -589,6 +589,7 @@ def fetch_prices_from_day(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Link AI news to NVDA intraday prices.")
+    # overwrite config options 
     parser.add_argument(
         "--config",
         default="config.yaml",
