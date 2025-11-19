@@ -5,9 +5,9 @@ Fetches news articles from Google News RSS based on keywords and date range.
 Stores results in both JSON and CSV formats.
 """
 
-import feedparser
-import requests
-from bs4 import BeautifulSoup
+import feedparser # read RSS subscriptions  
+import requests # send https  request to download html content
+from bs4 import BeautifulSoup # get content from html
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import json
@@ -68,6 +68,7 @@ class NewsFetcher:
             print(f"Error fetching RSS feed: {e}")
             return None
 
+    # not work with google news RSS, but can be useful for other APIs 
     def extract_article_content(self, url: str) -> str:
         """
         Extract full article content from URL using newspaper3k library.
@@ -77,18 +78,20 @@ class NewsFetcher:
         try:
             article = Article(url)
             article.download()
-            article.parse()
-
+            article.parse() # get artcitle.text, titile, authors, publish_date, etc. 
+            
+            # at least get some contents 
             if article.text and len(article.text) > 100:
-                print(f"    ✓ Extracted {len(article.text)} chars with newspaper3k")
+                print(f"Extracted {len(article.text)} chars with newspaper3k")
                 return article.text
             else:
-                print(f"    ⚠ newspaper3k returned short content, trying fallback...")
+                print(f"newspaper3k returned short content, trying fallback...")
         except Exception as e:
-            print(f"    ⚠ newspaper3k failed ({str(e)[:50]}), trying fallback...")
+            print(f"newspaper3k failed ({str(e)[:50]}), trying fallback...")
 
         # Method 2: Fallback to BeautifulSoup
         try:
+            # access news as a chrome browser, not python 
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -130,7 +133,7 @@ class NewsFetcher:
                 text = article_content.get_text(separator='\n', strip=True)
                 text = re.sub(r'\n\s*\n', '\n\n', text)
                 if len(text) > 100:
-                    print(f"    ✓ Extracted {len(text)} chars with BeautifulSoup")
+                    print(f"Extracted {len(text)} chars with BeautifulSoup")
                     return text
 
             # Last resort: get all paragraphs
@@ -138,13 +141,13 @@ class NewsFetcher:
             text = '\n\n'.join([p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 50])
 
             if text and len(text) > 100:
-                print(f"    ✓ Extracted {len(text)} chars from paragraphs")
+                print(f"Extracted {len(text)} chars from paragraphs")
                 return text
             else:
                 return "Content extraction failed - article may be behind paywall or blocked"
 
         except Exception as e:
-            print(f"    ✗ All methods failed: {str(e)[:80]}")
+            print(f"All methods failed: {str(e)[:80]}")
             return f"Error: {str(e)}"
 
     def parse_article_date(self, date_string: str) -> datetime:
@@ -167,6 +170,7 @@ class NewsFetcher:
         ny_dt = aware_dt.astimezone(self.ny_tz)
         return aware_dt, utc_dt, ny_dt
 
+    # convert diferent timezone to the same timezone
     def build_date_fields(self, utc_dt: datetime, ny_dt: datetime) -> Dict[str, str]:
         """Create CSV-friendly date fields mirroring the reference training data."""
         unknown = "Unknown"
@@ -227,16 +231,16 @@ class NewsFetcher:
 
             # Extract full content if requested
             if extract_full_content:
-                print(f"  Extracting full content...")
+                print(f"Extracting full content...")
                 article['content'] = self.extract_article_content(entry.link)
                 time.sleep(1)  # Be polite to servers
             else:
                 article['content'] = article['summary']
 
             self.articles.append(article)
-            print(f"  Added article: {article['title'][:60]}...")
+            print(f"Added article: {article['title'][:60]}...")
 
-        print(f"\n✓ Successfully fetched {len(self.articles)} articles")
+        print(f"Successfully fetched {len(self.articles)} articles")
 
     def save_to_json(self, filename: str):
         """Save articles to JSON file."""
@@ -255,7 +259,7 @@ class NewsFetcher:
             'title',
             'source',
             'url',
-            'actual date and time',
+            'actual date and time', ## this is for manual labor, go website and get the actual published date and time 
             'published_date_utc',
             'published_date_ny',
             'published_time_ny',
@@ -265,7 +269,7 @@ class NewsFetcher:
         ]
         df = df[column_order]
         df.to_csv(filename, index=False, encoding='utf-8')
-        print(f"✓ Saved to {filename}")
+        print(f"Saved to {filename}")
 
     def print_summary(self):
         """Print summary of fetched articles."""
@@ -324,9 +328,9 @@ def main():
         fetcher.save_to_csv(csv_filename)
         fetcher.print_summary()
     else:
-        print("\n⚠ No articles found matching the criteria")
+        print("No articles found matching the criteria")
 
-    print("\n✓ Done!")
+    print("Done!")
 
 
 if __name__ == "__main__":
