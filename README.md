@@ -9,14 +9,27 @@ If you prefer a picture before diving in, the diagrams in `ARCHITECTURE.md` outl
 
 ---
 
-## Quick Start
+# Quick Start
+## Environment Setup 
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-### Option A – Full demo (cached data, no API calls)
+## Optiona A - Run simulation with cached data 
+```
+cd simulation
+python simulation_program.py
+```
+
+## Option B – Full demo (cached data, no API calls)
 1. Follow the [Environment Setup](#environment-setup).
 2. `python controllerProgram.py`
-3. Enter any folder name that exists under `data/demo_data/` (for example `2025-10-14`). The script copies the demo CSVs into place, runs EAST, and spawns the simulator automatically.
+3. Enter any folder name that exists under `data/demo_data/` (for example `2025-10-13`). The script copies the demo CSVs into place, runs EAST, and spawns the simulator automatically.
 
-### Option B – Manual stage run
+## Option C – Manual stage run
 1. Fetch new data (optional): `python data_fetching/data_fetching.py --config config/config.yaml`
 2. Copy/rename the resulting `news_*.csv` → `feedcsv.csv` and `nvda_prices_*.csv` → `feedcsv2.csv` in the repo root.
 3. Run EAST to generate `src/east/output.txt`: `python src/east/run_east_model.py`
@@ -42,19 +55,6 @@ If you prefer a picture before diving in, the diagrams in `ARCHITECTURE.md` outl
 | `models/` | Saved predictors like `margin_predictor.pkl`. |
 
 All shared dependencies live in `requirements.txt`.
-
----
-
-## Environment Setup
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-The requirement set covers the analysis stack (`numpy`, `matplotlib`, `scikit-learn`) plus the sentiment/LLM helpers (`vaderSentiment`, `sentence-transformers`, `openai`) imported by downstream scripts.
 
 ---
 
