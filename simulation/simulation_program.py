@@ -4,6 +4,7 @@ import csv
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 
+
 class Stock:
     def __init__(self):
         self._prices = np.array([])
@@ -171,3 +172,5 @@ if __name__ == "__main__":
 
     holdDiff = numShares * (prices[-1] - prices[0])
     print(f"Holding until the end of the period would yield ${holdDiff:.2f}")
+    plt.savefig("plot.png", dpi=300)
+    print(f"saving the simulation plot to plot.png")
