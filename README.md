@@ -2,10 +2,12 @@
 
 Quant Bot stitches together Google News scraping, ML‑based margin prediction, and an NVDA trading simulation. You can either run the full controller for a cached date or trigger individual stages while iterating on a single component.
 
+Note that you currently CANNOT get everything to work end-to-end without some manual work because unfortunately our news APIs dont give full download access unless you pay money.
+
 - **Controller‑driven demo** – type a date from `data/demo_data/`, and `controllerProgram.py` copies the CSVs, executes EAST, and launches the simulation.
 - **Modular workflow** – use the scripts under `data_fetching/`, `src/east/`, `training/`, and `simulation/` independently when you only need a subset of the pipeline.
 
-If you prefer a picture before diving in, the diagrams in `ARCHITECTURE.md` outline the end‑to‑end data flow.
+See the diagrams in `ARCHITECTURE.md` for a visual explanation of how our files work.
 
 ---
 
@@ -18,18 +20,24 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## Optiona A - Run simulation with cached data 
+## Option A - Run simulation with cached data (this will SKIP running the core AI part, all it does is make the graph(s))
+##not really recommended, I think B is the coolest, but if B doesn't work then try this one 
+##and that'll at least show you the simulation if the AI won't work.
 ```
 cd simulation
 python simulation_program.py
 ```
 
-## Option B – Full demo (cached data, no API calls)
+## THIS IS THE BEST OPTION, YOU SHOULD DO THIS ONE
+## Option B – Full demo (cached data, no API calls) (Basically this bit PRETENDS you already went and got some stuff from the news APIs, and then it will,
+## feed it into the AI, and then graph the output, which is nice. It demonstrates the majority of what our program does
 1. Follow the [Environment Setup](#environment-setup).
 2. `python controllerProgram.py`
 3. Enter any folder name that exists under `data/demo_data/` (for example `2025-10-13`). The script copies the demo CSVs into place, runs EAST, and spawns the simulator automatically.
 
-## Option C – Manual stage run
+
+## do at your own risk
+## Option C – Manual stage run (NOT RECOMMENDED, IT'S KIND OF MESSY)
 1. Fetch new data (optional): `python data_fetching/data_fetching.py --config config/config.yaml`
 2. Copy/rename the resulting `news_*.csv` → `feedcsv.csv` and `nvda_prices_*.csv` → `feedcsv2.csv` in the repo root.
 3. Run EAST to generate `src/east/output.txt`: `python src/east/run_east_model.py`
@@ -54,6 +62,7 @@ python simulation_program.py
 | `simulation/` | Plotting/exit‑signal scripts (`simulation_program.py`, helpers, configs). |
 | `models/` | Saved predictors like `margin_predictor.pkl`. |
 
+##!!!
 All shared dependencies live in `requirements.txt`.
 
 ---
@@ -124,7 +133,7 @@ Outputs:
      --output models/margin_predictor.pkl \
      --test-size 0.2
    ```
-3. **Use predictions** – `training/src/integrate_margins.py` loads the fetched CSVs and calls `margin_predictor.predict_margins` (rule-based by default, ML-powered when the model exists).
+3. **Use predictions** – `training/src/integrate_margins.py` loads the fetched CSVs and calls `margin_predictor.predict_margins` 
 
 ---
 
@@ -145,9 +154,10 @@ Outputs:
    cd simulation
    python simulation_program.py
    ```
-   The script visualizes the upper/lower margins, labels the first exit signal, and prints realized vs. hold returns.
-
-`preSimulationController.py` and `simPriceHelper.py` can automate CSV prep if you want a lighter-weight alternative to the main controller.
+   
+##The script visualizes the upper/lower margins, labels the first exit signal, and prints realized vs. hold returns. Nice little visual
+##these programs are little support guys that basically get your files ready to go before the simulation program runs
+`preSimulationController.py` and `simPriceHelper.py` 
 
 ---
 
@@ -159,15 +169,12 @@ Outputs:
 - `simulation/targetSimDate.txt` – the simulation date override (auto-managed by the controller).
 
 
-## Generated data base for users trying
-However users need to manually find the contents of the news and update the dataset 
-Check here for genereated database
+##you can see some of the news data in here
 ```
 data/data_base 
 ```
 
-If user want to test a demo, use these data
+If user want to test a demo, use this data
 ```
 data/demo_data
 ``` 
-Use these docs when onboarding new contributors or when you need to verify the end‑to‑end data shapes before making code changes.
