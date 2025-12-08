@@ -126,7 +126,7 @@ def plot_stock(stock: Stock, timestamps, interval_minutes=30):
 
 if __name__ == "__main__":
     FILE_NAME = "NVDA_prices.csv"
-    MARGINS_FILE = "output.txt"
+    MARGINS_FILE = "../src/east/output.txt"
 
     s = Stock()
     s.set_name("NVDA")
